@@ -988,6 +988,16 @@ addRow(
 document.getElementById("repo").innerHTML =
   '<a href="https://github.com/c3p7f2/build-openwrt" target="_blank">觉得好用给个⭐</a>';
 
+
+  
+GrowlNotification.notify({
+  title: '新版本已推出',
+  description: '修复更新意外出错，增加沙盒模式防止本机固件写入出错。建议更新：⭐⭐⭐⭐⭐',
+  type: 'warning',
+  position: 'top-right',
+  closeTimeout: 0
+});
+
 // 清空body内容
 // document.body.innerHTML = '';
 
