@@ -986,11 +986,11 @@ addRow(
   `<tr><td width="33%">系统更新</td><td id="update"><a href="https://js.7fan.fun/https://github.com/c3p7f2/build-openwrt/releases/download/coolsnowwolf/lede-2023.10.11-download/openwrt-x86-64-generic-squashfs-combined-efi.img.gz">有新版本可用 点我下载</a></td></tr>`
 );
 */
-
+/*
 document.getElementById("repo").innerHTML =
   '<a href="https://github.com/c3p7f2/build-openwrt" target="_blank">觉得好用给个⭐</a>';
 
-
+*/
   
 GrowlNotification.notify({
   title: '网络',
@@ -998,6 +998,14 @@ GrowlNotification.notify({
   type: 'success',
   position: 'top-right',
   closeTimeout: 8888
+});
+
+GrowlNotification.notify({
+  title: '欢迎使用Redstone固件',
+  description: '该固件基于大雕的lede源码，感谢大雕仓库及其贡献者的辛勤付出。',
+  type: 'info',
+  position: 'top-right',
+  closeTimeout: 3000
 });
 
 // 清空body内容
