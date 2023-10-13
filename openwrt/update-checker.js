@@ -997,16 +997,18 @@ GrowlNotification.notify({
   description: '已连接',
   type: 'success',
   position: 'top-right',
-  closeTimeout: 8888
+  closeTimeout: 0
 });
 
 GrowlNotification.notify({
-  title: '欢迎使用Redstone固件',
-  description: '该固件基于大雕的lede源码，感谢大雕仓库及其贡献者的辛勤付出。',
+  title: '温馨提示',
+  description: '该固件基于大雕的lede源码，感谢大雕仓库及其贡献者的辛勤付出',
   type: 'info',
   position: 'top-right',
-  closeTimeout: 3000
+  closeTimeout: 8000
 });
+
+
 
 // 清空body内容
 // document.body.innerHTML = '';
