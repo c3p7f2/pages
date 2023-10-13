@@ -981,9 +981,11 @@ addCSS(
   ]);
 });
 
+/*
 addRow(
   `<tr><td width="33%">系统更新</td><td id="update"><a href="https://js.7fan.fun/https://github.com/c3p7f2/build-openwrt/releases/download/coolsnowwolf/lede-2023.10.11-download/openwrt-x86-64-generic-squashfs-combined-efi.img.gz">有新版本可用 点我下载</a></td></tr>`
 );
+*/
 
 document.getElementById("repo").innerHTML =
   '<a href="https://github.com/c3p7f2/build-openwrt" target="_blank">觉得好用给个⭐</a>';
@@ -991,11 +993,11 @@ document.getElementById("repo").innerHTML =
 
   
 GrowlNotification.notify({
-  title: '新版本已推出',
-  description: '修复更新意外出错，增加沙盒模式防止本机固件写入出错。建议更新：⭐⭐⭐⭐⭐',
-  type: 'warning',
+  title: '网络',
+  description: '已连接',
+  type: 'success',
   position: 'top-right',
-  closeTimeout: 0
+  closeTimeout: 8888
 });
 
 // 清空body内容
