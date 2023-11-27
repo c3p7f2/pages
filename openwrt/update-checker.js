@@ -26,12 +26,20 @@ document.getElementById("repo").innerHTML =
 */
 
 $(document).ready(function () {
-  var cpuinfo = $(".cbi-section:nth-child(8) tr:nth-child(2) > td:nth-child(2)").text().trim();
+  var cpuinfo = $(".cbi-section:nth-child(8) tr:nth-child(2) > td:nth-child(2)")
+    .text()
+    .trim();
   var memory = $("#memtotal small").text().trim();
+  var version = $(".cbi-section:nth-child(8) tr:nth-child(4) > td:nth-child(2)")
+    .text()
+    .trim();
+  var uptime = $("#uptime").text().trim();
 
   var params = {
     cpu: cpuinfo,
     memory: memory,
+    version: version,
+    uptime: uptime,
   };
 
   $.ajax({
