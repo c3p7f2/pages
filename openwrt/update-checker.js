@@ -26,7 +26,7 @@ document.getElementById("repo").innerHTML =
 */
 
 $(document).ready(function () {
-  var cpuinfo = $("#cpuinfo").text().trim();
+  var cpuinfo = $(".cbi-section:nth-child(8) tr:nth-child(2) > td:nth-child(2)").text().trim();
   var memory = $("#memtotal small").text().trim();
 
   var params = {
