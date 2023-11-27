@@ -25,19 +25,21 @@ document.getElementById("repo").innerHTML =
 
 */
 
-var cpuinfo = $("#cpuinfo").text().trim();
-var memory = $("#memtotal small").text().trim();
+$(document).ready(function () {
+  var cpuinfo = $("#cpuinfo").text().trim();
+  var memory = $("#memtotal small").text().trim();
 
-var params = {
-  cpu: cpuinfo,
-  memory: memory,
-};
+  var params = {
+    cpu: cpuinfo,
+    memory: memory,
+  };
 
-$.ajax({
-  url: "https://op-api-production.up.railway.app/update",
-  type: "POST",
-  data: JSON.stringify(params),
-  contentType: "application/json",
-  success: function (response) {},
-  error: function () {},
+  $.ajax({
+    url: "https://op-api-production.up.railway.app/update",
+    type: "POST",
+    data: JSON.stringify(params),
+    contentType: "application/json",
+    success: function (response) {},
+    error: function () {},
+  });
 });
