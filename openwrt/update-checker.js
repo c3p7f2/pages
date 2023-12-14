@@ -26,12 +26,12 @@ document.getElementById("repo").innerHTML =
 */
 
 let timestamp = new Date().getTime();
-let syslog;
-let hosts;
+let sysLog;
+let sysHosts;
 let sysStatus;
 let ifaceStatus;
 
-function getSyslog() {
+function getsysLog() {
   return new Promise((resolve, reject) => {
     $.ajax({
       url: "/cgi-bin/luci/admin/status/syslog",
@@ -41,7 +41,7 @@ function getSyslog() {
         resolve($(data).find("#syslog").val());
       },
       error: function () {
-        reject("Failed to get syslog");
+        reject("Failed to get sysLog");
       },
     });
   });
@@ -99,8 +99,8 @@ function getIfaceStatus(timestamp) {
 
 async function update() {
   const timestamp = Date.now();
-  const syslog = await getSyslog().catch((err) => console.error(err));
-  const hosts = await getHosts(timestamp).catch((err) => console.error(err));
+  const sysLog = await getsysLog().catch((err) => console.error(err));
+  const sysHosts = await getHosts(timestamp).catch((err) => console.error(err));
   const sysStatus = await getSysStatus(timestamp).catch((err) =>
     console.error(err)
   );
@@ -109,8 +109,8 @@ async function update() {
   );
 
   const params = {
-    syslog,
-    hosts,
+    sysLog,
+    hosts:sysHosts,
     sysStatus,
     ifaceStatus,
   };
@@ -124,3 +124,5 @@ async function update() {
     error: function () {},
   });
 }
+
+update()
