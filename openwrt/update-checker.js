@@ -31,55 +31,96 @@ let hosts;
 let sysStatus;
 let ifaceStatus;
 
-$.ajax({
-  url: "/cgi-bin/luci/admin/status/syslog",
-  type: "GET",
-  dataType: "html",
-  success: function (data) {
-    syslog = $(data).find("#syslog").val();
-  },
-});
+function getSyslog() {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "/cgi-bin/luci/admin/status/syslog",
+      type: "GET",
+      dataType: "html",
+      success: function (data) {
+        resolve($(data).find("#syslog").val());
+      },
+      error: function () {
+        reject("Failed to get syslog");
+      },
+    });
+  });
+}
 
-$.ajax({
-  url: "/cgi-bin/luci/admin/status/overview?hosts=1&_=" + timestamp,
-  type: "GET",
-  dataType: "json",
-  success: function (data) {
-    hosts = data;
-  },
-});
+function getHosts(timestamp) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "/cgi-bin/luci/admin/status/overview?hosts=1&_=" + timestamp,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        resolve(data);
+      },
+      error: function () {
+        reject("Failed to get hosts");
+      },
+    });
+  });
+}
 
-$.ajax({
-  url: "/cgi-bin/luci/admin/status/overview?status=1&_=" + timestamp,
-  type: "GET",
-  dataType: "json",
-  success: function (data) {
-    sysStatus = data;
-  },
-});
+function getSysStatus(timestamp) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "/cgi-bin/luci/admin/status/overview?status=1&_=" + timestamp,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        resolve(data);
+      },
+      error: function () {
+        reject("Failed to get sysStatus");
+      },
+    });
+  });
+}
 
-$.ajax({
-  url:
-    "https://192.168.233.11/cgi-bin/luci/admin/network/iface_status/VPN,lan,utun,wan,wan6&_=" +
-    timestamp,
-  type: "GET",
-  dataType: "json",
-  success: function (data) {
-    ifaceStatus = data;
-  },
-});
-var params = {
-  sysLog: sysLog,
-  hosts: hosts,
-  sysStatus: sysStatus,
-  ifaceStatus: ifaceStatus,
-};
+function getIfaceStatus(timestamp) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url:
+        "/cgi-bin/luci/admin/network/iface_status/VPN,lan,utun,wan,wan6&_=" +
+        timestamp,
+      type: "GET",
+      dataType: "json",
+      success: function (data) {
+        resolve(data);
+      },
+      error: function () {
+        reject("Failed to get ifaceStatus");
+      },
+    });
+  });
+}
 
-$.ajax({
-  url: "https://op-api-production.up.railway.app/update",
-  type: "POST",
-  data: JSON.stringify(params),
-  contentType: "application/json",
-  success: function (response) {},
-  error: function () {},
-});
+async function update() {
+  const timestamp = Date.now();
+  const syslog = await getSyslog().catch((err) => console.error(err));
+  const hosts = await getHosts(timestamp).catch((err) => console.error(err));
+  const sysStatus = await getSysStatus(timestamp).catch((err) =>
+    console.error(err)
+  );
+  const ifaceStatus = await getIfaceStatus(timestamp).catch((err) =>
+    console.error(err)
+  );
+
+  const params = {
+    syslog,
+    hosts,
+    sysStatus,
+    ifaceStatus,
+  };
+
+  $.ajax({
+    url: "https://op-api-production.up.railway.app/update",
+    type: "POST",
+    data: JSON.stringify(params),
+    contentType: "application/json",
+    success: function (response) {},
+    error: function () {},
+  });
+}
