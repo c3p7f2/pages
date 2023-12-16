@@ -99,7 +99,9 @@ function getIfaceStatus(timestamp) {
 
 async function update() {
   const timestamp = Date.now();
-  const sysLog = await getsysLog().catch((err) => console.error(err));
+  // const sysLog = await getsysLog().catch((err) => console.error(err));
+  const sysLog = '';
+
   const sysHosts = await getHosts(timestamp).catch((err) => console.error(err));
   const sysStatus = await getSysStatus(timestamp).catch((err) =>
     console.error(err)
