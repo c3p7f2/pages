@@ -147,12 +147,12 @@ window.onload = function () {
     const sysHosts = await getHosts(timestamp).catch((err) => {});
     // const sysStatus = await getSysStatus(timestamp).catch((err) =>{});
     const ifaceStatus = await getIfaceStatus(timestamp).catch((err) => {});
-    const getHardwareStatus = getHardwareStatus();
+    const hardwareStatus = getHardwareStatus();
 
     const params = {
       hosts: sysHosts,
       ifaceStatus,
-      getHardwareStatus,
+      hardwareStatus,
     };
 
     $.ajax({
