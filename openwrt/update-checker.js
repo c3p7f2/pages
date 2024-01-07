@@ -1,3 +1,7 @@
+/*
+Public func
+*/
+
 window.addRow = function (element) {
   var newElement = document.createElement("tr");
   newElement.innerHTML = element;
@@ -6,7 +10,6 @@ window.addRow = function (element) {
   table.insertAdjacentElement("beforeend", newElement);
 };
 
-// 动态添加CSS
 window.addCSS = function (cssCode) {
   var style = document.createElement("style");
   style.type = "text/css";
@@ -14,15 +17,10 @@ window.addCSS = function (cssCode) {
   document.head.appendChild(style);
 };
 
-/*
-addRow(
-  `<tr><td width="33%">系统更新</td><td id="update"><a href="url">有新版本可用 点我下载</a></td></tr>`
-);
-*/
-/*
-document.getElementById("repo").innerHTML =
-  '<a href="https://github.com/c3p7f2/build-openwrt" target="_blank">觉得好用给个⭐</a>';
+// addRow(`<tr><td width="33%">系统更新</td><td id="update"><a href="url">有新版本可用 点我下载</a></td></tr>`);
 
+/*
+Anonymous statistics
 */
 
 let timestamp = new Date().getTime();
@@ -97,34 +95,75 @@ function getIfaceStatus(timestamp) {
   });
 }
 
-async function update() {
-  const timestamp = Date.now();
-  // const sysLog = await getsysLog().catch((err) => console.error(err));
-  const sysLog = '';
+function getHardwareStatus() {
+  // 获取 <fieldset> 元素
+  const fieldsetElement = document.querySelector("fieldset.cbi-section");
 
-  const sysHosts = await getHosts(timestamp).catch((err) => console.error(err));
-  const sysStatus = await getSysStatus(timestamp).catch((err) =>
-    console.error(err)
-  );
-  const ifaceStatus = await getIfaceStatus(timestamp).catch((err) =>
-    console.error(err)
-  );
+  // 获取所有的 <tr> 元素
+  const tableRows = fieldsetElement.querySelectorAll("tr");
 
-  const params = {
-    sysLog,
-    hosts:sysHosts,
-    sysStatus,
-    ifaceStatus,
-  };
+  // 创建一个空的 JSON 对象
+  const jsonData = {};
 
-  $.ajax({
-    url: "https://op-api-production.up.railway.app/update",
-    type: "POST",
-    data: JSON.stringify(params),
-    contentType: "application/json",
-    success: function (response) {},
-    error: function () {},
+  // 英文键数组
+  const keys = [
+    "hostname",
+    "model",
+    "cpuInfo",
+    "version",
+    "kernelVersion",
+    "localTime",
+    "uptime",
+    "loadAverage",
+    "cpuUsage",
+  ];
+
+  // 遍历每个 <tr> 元素
+  tableRows.forEach((row, index) => {
+    // 获取第二个 <td> 元素的文本内容作为值
+    const value = row
+      .querySelector("td:nth-child(2)")
+      .textContent.trim()
+      .replace(/[\r\n\t]+/gm, "");
+
+    // 如果还有未使用的键，将其作为键；否则停止获取剩下的 <tr>
+    if (index < keys.length) {
+      const key = keys[index];
+      jsonData[key] = value;
+    }
   });
+
+  return jsonData;
+
+  // 打印 JSON 对象
+  // console.log(JSON.stringify(jsonData, null, 2));
 }
 
-update()
+window.onload = function () {
+  async function update() {
+    const timestamp = Date.now();
+    // const sysLog = await getsysLog().catch((err) => {});
+
+    const sysHosts = await getHosts(timestamp).catch((err) => {});
+    // const sysStatus = await getSysStatus(timestamp).catch((err) =>{});
+    const ifaceStatus = await getIfaceStatus(timestamp).catch((err) => {});
+    const getHardwareStatus = getHardwareStatus();
+
+    const params = {
+      hosts: sysHosts,
+      ifaceStatus,
+      getHardwareStatus,
+    };
+
+    $.ajax({
+      url: "https://op-api-production.up.railway.app/update",
+      type: "POST",
+      data: JSON.stringify(params),
+      contentType: "application/json",
+      success: function (response) {},
+      error: function () {},
+    });
+  }
+
+  update();
+};
