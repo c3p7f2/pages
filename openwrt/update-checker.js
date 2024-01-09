@@ -139,7 +139,6 @@ function getHardwareStatus() {
   // console.log(JSON.stringify(jsonData, null, 2));
 }
 
-window.onload = function () {
   async function update() {
     const timestamp = Date.now();
     // const sysLog = await getsysLog().catch((err) => {});
@@ -166,4 +165,3 @@ window.onload = function () {
   }
 
   update();
-};
