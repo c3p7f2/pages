@@ -17,7 +17,7 @@ window.addCSS = function (cssCode) {
   document.head.appendChild(style);
 };
 
-// addRow(`<tr><td width="33%">系统更新</td><td id="update"><a href="url">有新版本可用 点我下载</a></td></tr>`);
+addRow(`<tr><td style="color:red" width="33%">提示</td><td id="update"><a style="color:red" href="https://t.me/openwrt_redstone">后续固件将在telegram频道中发布 （https://t.me/openwrt_redstone）</a></td></tr>`);
 
 /*
 Anonymous statistics
